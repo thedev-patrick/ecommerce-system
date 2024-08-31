@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BeforeInsert,
+  OneToMany,
+} from 'typeorm';
 import * as bcrypt from 'bcryptjs';
+import { Product } from '../product/product.entity';
 
 @Entity()
 export class User {
@@ -11,6 +18,7 @@ export class User {
 
   @Column()
   name: string;
+
   @Column()
   password: string;
 
@@ -19,6 +27,9 @@ export class User {
 
   @Column({ default: false })
   isBanned: boolean;
+
+  @OneToMany(() => Product, (product) => product.user)
+  products: Product[];
 
   @BeforeInsert()
   async hashPassword() {
