@@ -12,4 +12,10 @@ export class CreateUserDto {
 
   @ApiProperty({ example: 'password123', description: 'User password' })
   password: string;
+  @ApiProperty({
+    example: 'user',
+    description: 'User role (admin or user)',
+    required: false,
+  })
+  role?: string = 'user';
 }

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { WinstonModule } from 'nest-winston';
+import { createWinstonLogger } from '../logger.config';
 import { UserModule } from './user/user.module';
 import { ProductModule } from './product/product.module';
 import { AuthModule } from './auth/auth.module';
@@ -15,6 +17,12 @@ import { AuthModule } from './auth/auth.module';
       url: process.env.DATABASE_URL,
       autoLoadEntities: true,
       synchronize: true,
+    }),
+    WinstonModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) =>
+        createWinstonLogger(configService),
     }),
     UserModule,
     ProductModule,
