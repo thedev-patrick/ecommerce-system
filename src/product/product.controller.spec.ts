@@ -117,6 +117,20 @@ describe('ProductController', () => {
       expect(result).toEqual(approvedProducts);
     });
   });
+  describe('findAll', () => {
+    it('should return all products for an admin user', async () => {
+      const products = [
+        { id: 1, name: 'Product 1', isApproved: true },
+        { id: 2, name: 'Product 2', isApproved: false },
+      ];
+
+      jest.spyOn(service, 'findAll').mockResolvedValue(products as any);
+
+      const result = await controller.findAll();
+      expect(service.findAll).toHaveBeenCalled();
+      expect(result).toEqual(products);
+    });
+  });
 
   describe('approveProduct', () => {
     it('should call approveProduct on service with product ID', async () => {

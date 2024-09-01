@@ -200,7 +200,26 @@ describe('ProductService', () => {
       );
     });
   });
+  describe('findAll', () => {
+    it('should return all products, both approved and unapproved', async () => {
+      const products = [
+        { id: 1, name: 'Product 1', isApproved: true },
+        { id: 2, name: 'Product 2', isApproved: false },
+      ];
 
+      jest.spyOn(repository, 'find').mockResolvedValue(products as any);
+
+      const result = await service.findAll();
+      expect(result).toEqual(products);
+      expect(repository.find).toHaveBeenCalled();
+    });
+
+    it('should throw InternalServerErrorException if fetching all products fails', async () => {
+      jest.spyOn(repository, 'find').mockRejectedValue(new Error('Database error'));
+
+      await expect(service.findAll()).rejects.toThrow(InternalServerErrorException);
+    });
+  });
   describe('disapproveProduct', () => {
     it('should disapprove a product', async () => {
       jest
