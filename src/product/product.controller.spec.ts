@@ -22,6 +22,7 @@ describe('ProductController', () => {
             update: jest.fn(),
             delete: jest.fn(),
             findAllApproved: jest.fn(),
+            findAll: jest.fn(),
             approveProduct: jest.fn(),
             disapproveProduct: jest.fn(),
           },
@@ -117,6 +118,7 @@ describe('ProductController', () => {
       expect(result).toEqual(approvedProducts);
     });
   });
+
   describe('findAll', () => {
     it('should return all products for an admin user', async () => {
       const products = [

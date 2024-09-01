@@ -45,10 +45,15 @@ export class ProductController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all products for the authenticated user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns a list of products owned by the authenticated user',
+  })
   async findMyProducts(@GetUser() user: User) {
     return this.productService.findByUser(user);
   }
-  @Get('/all')
+
+  @Get('all')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('admin')
   @ApiBearerAuth()
@@ -57,9 +62,7 @@ export class ProductController {
     status: 200,
     description: 'Returns all products, both approved and unapproved',
   })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
   async findAll() {
-    this.logger.log('Admin fetching all products.');
     return this.productService.findAll();
   }
 
@@ -67,6 +70,10 @@ export class ProductController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new product' })
+  @ApiResponse({
+    status: 201,
+    description: 'The product has been successfully created.',
+  })
   async create(
     @Body() createProductDto: CreateProductDto,
     @GetUser() user: User,
@@ -78,6 +85,14 @@ export class ProductController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update a product owned by the authenticated user' })
+  @ApiResponse({
+    status: 200,
+    description: 'The product has been successfully updated.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Product not found.',
+  })
   async update(
     @Param('id') id: number,
     @Body() updateProductDto: UpdateProductDto,
@@ -90,6 +105,14 @@ export class ProductController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a product owned by the authenticated user' })
+  @ApiResponse({
+    status: 200,
+    description: 'The product has been successfully deleted.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Product not found.',
+  })
   async delete(@Param('id') id: number, @GetUser() user: User) {
     return this.productService.delete(id, user);
   }
@@ -99,6 +122,14 @@ export class ProductController {
   @Roles('admin')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Approve a product (Admin only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'The product has been successfully approved.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Product not found.',
+  })
   async approveProduct(@Param('id') id: number) {
     return this.productService.approveProduct(id);
   }
@@ -108,6 +139,14 @@ export class ProductController {
   @Roles('admin')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Disapprove a product (Admin only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'The product has been successfully disapproved.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Product not found.',
+  })
   async disapproveProduct(@Param('id') id: number) {
     return this.productService.disapproveProduct(id);
   }
