@@ -77,7 +77,14 @@ export class ProductService {
       );
     }
   }
-
+  async findAll(): Promise<Product[]> {
+    try {
+      return await this.productRepository.find();
+    } catch (error) {
+      this.logger.error('Failed to fetch all products', error.stack);
+      throw new InternalServerErrorException('Error fetching products.');
+    }
+  }
   async findByUser(user: User): Promise<Product[]> {
     return await this.productRepository.find({ where: { user } });
   }

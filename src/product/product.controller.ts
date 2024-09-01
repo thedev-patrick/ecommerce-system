@@ -48,6 +48,20 @@ export class ProductController {
   async findMyProducts(@GetUser() user: User) {
     return this.productService.findByUser(user);
   }
+  @Get('/all')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('admin')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get all products (admin only)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns all products, both approved and unapproved',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  async findAll() {
+    this.logger.log('Admin fetching all products.');
+    return this.productService.findAll();
+  }
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
