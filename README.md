@@ -33,8 +33,22 @@ This is a basic e-commerce backend API built with NestJS. The system allows user
 
 4. **Run the application**:
 
+    - For development
+
+    ```bash
+    npm run start:dev 
+    ```
+
+    - For staging  
+
     ```bash
     npm run start
+    ```
+
+    - For  production environment
+
+    ```bash
+    npm run start:prod
     ```
 
 5. **Access API Documentation**:
