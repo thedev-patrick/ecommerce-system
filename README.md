@@ -58,6 +58,11 @@ This is a basic e-commerce backend API built with NestJS. The system allows user
 
 - `DATABASE_URL`: PostgreSQL connection string.
 - `JWT_SECRET`: Secret key for JWT.
+- `PORT`: App port
+- `BCRYPT_SALT_ROUNDS`: salt round algorithm
+- `ADMIN_EMAIL`: admin's email
+- `ADMIN_NAME`:  admin's name
+- `ADMIN_PASSWORD`: secure password
 
 ## License
 
