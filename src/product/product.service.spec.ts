@@ -215,9 +215,13 @@ describe('ProductService', () => {
     });
 
     it('should throw InternalServerErrorException if fetching all products fails', async () => {
-      jest.spyOn(repository, 'find').mockRejectedValue(new Error('Database error'));
+      jest
+        .spyOn(repository, 'find')
+        .mockRejectedValue(new Error('Database error'));
 
-      await expect(service.findAll()).rejects.toThrow(InternalServerErrorException);
+      await expect(service.findAll()).rejects.toThrow(
+        InternalServerErrorException,
+      );
     });
   });
   describe('disapproveProduct', () => {
