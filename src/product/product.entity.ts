@@ -12,8 +12,11 @@ export class Product {
   @Column()
   description: string;
 
-  @Column()
+  @Column('decimal', { default: 0.0 })
   price: number;
+
+  @Column('int', { default: 0 })
+  quantity: number;
 
   @Column({ default: false })
   isApproved: boolean;

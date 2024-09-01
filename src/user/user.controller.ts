@@ -1,4 +1,11 @@
-import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Patch,
+  UseGuards,
+  Logger,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiTags,
@@ -10,54 +17,47 @@ import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
-import { CreateUserDto } from './dto/create-user.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  private readonly logger = new Logger(UserController.name);
 
-  @Post('register')
-  @ApiOperation({ summary: 'Register a new user' })
-  @ApiResponse({ status: 201, description: 'User registered successfully' })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  async register(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('admin')
-  @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, description: 'Returns a list of users' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiOperation({ summary: 'Get all users (Admin only)' })
+  @ApiResponse({ status: 200, description: 'Users retrieved successfully' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   async findAll() {
+    this.logger.log('Admin fetching all users.');
     return this.userService.findAll();
   }
 
-  @Post('ban/:id')
+  @Patch(':id/ban')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('admin')
-  @ApiOperation({ summary: 'Ban a user by ID' })
-  @ApiParam({ name: 'id', description: 'User ID', example: 1 })
+  @ApiOperation({ summary: 'Ban a user (Admin only)' })
+  @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'User banned successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   async banUser(@Param('id') id: number) {
+    this.logger.log(`Admin banning user with id ${id}.`);
     return this.userService.banUser(id);
   }
 
-  @Post('unban/:id')
+  @Patch(':id/unban')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('admin')
-  @ApiOperation({ summary: 'Unban a user by ID' })
-  @ApiParam({ name: 'id', description: 'User ID', example: 1 })
+  @ApiOperation({ summary: 'Unban a user (Admin only)' })
+  @ApiParam({ name: 'id', description: 'User ID' })
   @ApiResponse({ status: 200, description: 'User unbanned successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   async unbanUser(@Param('id') id: number) {
+    this.logger.log(`Admin unbanning user with id ${id}.`);
     return this.userService.unbanUser(id);
   }
 }
